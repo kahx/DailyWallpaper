@@ -17,3 +17,6 @@ Daily Wallpaper changes device's wallpaper with which image comes from API once 
 - [Gson](https://github.com/google/gson)
 - [Material Design](https://material.io/develop/android/docs/getting-started/)
 - [Spotlight](https://github.com/TakuSemba/Spotlight)
+
+## Licence
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/kahx/DailyWallpaper/blob/master/LICENSE.md) file for details.
