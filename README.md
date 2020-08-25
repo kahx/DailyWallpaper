@@ -1,4 +1,6 @@
 # Daily Wallpaper
+<img src="https://user-images.githubusercontent.com/25431654/91181358-7dc83100-e6f1-11ea-9f58-8788b8e4284b.png" width="125" height="125">
+
 Daily Wallpaper changes device's wallpaper with which image comes from API once a day. The main goal of this app is to be a sample of how to build android application that uses the background workers, broadcasts  etc. in Kotlin.
 
 ## Outputs
