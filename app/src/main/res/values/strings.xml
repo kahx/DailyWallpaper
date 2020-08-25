@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">Daily Wallpaper</string>
+    <string name="c1">Nature</string>
+    <string name="c2">Space</string>
+    <string name="c3">Sky</string>
+    <string name="c4">Cyberpunk</string>
+    <string name="c5">Anime</string>
+    <string name="c6">Animals</string>
+    <string name="c7">Car</string>
+    <string name="c8">Editor\'s Pick</string>
+    <string name="saveto">Save To Gallery</string>
+    <string name="slide">You can slide</string>
+    <string name="categories">Categories</string>
+    <string name="desc">You can pick max 3 categories. Every day, the algorithm will choose one randomly from your choices and set as wallpaper.</string>
+    <string name="save">Save</string>
+    <string name="see">See Today\'s Wallpaper</string>
+    <string name="change">Change</string>
+    <string name="changeString">If you don\'t like today\'s selected category you can change.</string>
+</resources>

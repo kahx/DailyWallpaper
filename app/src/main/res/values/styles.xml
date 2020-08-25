@@ -1,0 +1,18 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="colorSurface">@color/colorPrimaryDark</item>
+        <item name="android:statusBarColor">#121212</item>
+        <item name="snackbarStyle">@style/MySnackbar</item>
+    </style>
+    <style name="WallTheme" parent="Theme.MaterialComponents.NoActionBar">
+        <item name="snackbarStyle">@style/MySnackbar</item>
+    </style>
+    <style name="MySnackbar" parent="Widget.MaterialComponents.Snackbar">
+        <item name="android:layout_margin">30dp</item>
+    </style>
+</resources>
