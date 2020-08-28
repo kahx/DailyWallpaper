@@ -65,8 +65,6 @@ class BackWork(context: Context, workerParams: WorkerParameters) : Worker(contex
                     override fun onResponse(call: Call<DataClass>, response: Response<DataClass>) {
                         val json = Gson().toJson(response.body())
                         val jsonObject = JSONObject(json).get(wallpaper).toString()
-                        val date = JSONObject(json).get("tarih").toString()
-                        editor.putString("date", date).apply()
                         editor.putString("currentCatLink", jsonObject).apply()
                         val wallpaperManager: WallpaperManager =
                             WallpaperManager.getInstance(applicationContext)
