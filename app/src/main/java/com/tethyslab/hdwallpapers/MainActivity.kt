@@ -60,24 +60,33 @@ class MainActivity : AppCompatActivity(){
         val request = PeriodicWorkRequestBuilder<BackWork>(1, TimeUnit.MILLISECONDS)
             .build()
 
-        if(sharedPreferences.contains("date")){
-            var date = sharedPreferences.getString("date", null)
-            var sdf = SimpleDateFormat("dd-MM-yyyy", Locale.getDefault())
-            var parsedDate : Date = sdf.parse(date)
-            var compare = parsedDate.compareTo(currentDate.time)
-            if (compare == -1){
-                Snackbar.make(findViewById(R.id.mainLayout),"Seems like our background worker occured...", Snackbar.LENGTH_INDEFINITE)
-                    .setTextColor(resources.getColor(R.color.colorAccent))
-                    .setBackgroundTint(resources.getColor(R.color.colorPrimaryDark))
-                    .setAction("RETRY"){
-                        progressBar.visibility = View.VISIBLE
-                        editor.putStringSet("selectedCats", hashSet).apply()
-                        WorkManager.getInstance(this@MainActivity).cancelAllWork()
-                        WorkManager.getInstance(this@MainActivity).enqueueUniquePeriodicWork("uniqueWork",ExistingPeriodicWorkPolicy.KEEP,request)
+        if(sharedPreferences.contains("currentCat")){
+            val currentCat = sharedPreferences.getString("currentCat", null)
+            val currentCatLink = sharedPreferences.getString("currentCatLink", null)
+            RetrofitClient.getClient().create(DataService::class.java)
+                .getData().enqueue(object : retrofit2.Callback<DataClass> {
+                    override fun onResponse(call: Call<DataClass>, response: Response<DataClass>) {
+                        val json = Gson().toJson(response.body())
+                        val jsonObject = JSONObject(json).get(currentCat).toString()
+                        if (jsonObject != currentCatLink){
+                            Snackbar.make(findViewById(R.id.mainLayout),"Seems like our background worker occured...", Snackbar.LENGTH_INDEFINITE)
+                                .setTextColor(resources.getColor(R.color.colorAccent))
+                                .setBackgroundTint(resources.getColor(R.color.colorPrimaryDark))
+                                .setAction("RETRY"){
+                                    progressBar.visibility = View.VISIBLE
+                                    editor.putStringSet("selectedCats", hashSet).apply()
+                                    WorkManager.getInstance(this@MainActivity).cancelAllWork()
+                                    WorkManager.getInstance(this@MainActivity).enqueueUniquePeriodicWork("uniqueWork",ExistingPeriodicWorkPolicy.KEEP,request)
+                                }
+                                .setActionTextColor(resources.getColor(R.color.colorAccent))
+                                .show()
+                        }
                     }
-                    .setActionTextColor(resources.getColor(R.color.colorAccent))
-                    .show()
-            }
+
+                    override fun onFailure(call: Call<DataClass>, t: Throwable) {
+
+                    }
+                })
         }
 
         c1.findViewById<CheckBox>(R.id.c1).setOnCheckedChangeListener { buttonView, isChecked ->
