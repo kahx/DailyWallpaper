@@ -49,15 +49,15 @@ class MainActivity : AppCompatActivity(){
 
         val currentDate = Calendar.getInstance()
         val dueDate = Calendar.getInstance()
-        dueDate.set(Calendar.HOUR_OF_DAY, 17)
-        dueDate.set(Calendar.MINUTE, 28)
-        dueDate.set(Calendar.SECOND, 5)
+        dueDate.set(Calendar.HOUR_OF_DAY, 3)
+        dueDate.set(Calendar.MINUTE, 0)
+        dueDate.set(Calendar.SECOND, 0)
         val timeDiff = dueDate.timeInMillis - currentDate.timeInMillis
         if (dueDate.before(currentDate)) {
             dueDate.add(Calendar.HOUR_OF_DAY, 24)
         }
 
-        val request = PeriodicWorkRequestBuilder<BackWork>(1, TimeUnit.MILLISECONDS)
+        val request = PeriodicWorkRequestBuilder<BackWork>(timeDiff, TimeUnit.MILLISECONDS)
             .build()
 
         if(sharedPreferences.contains("currentCat")){
