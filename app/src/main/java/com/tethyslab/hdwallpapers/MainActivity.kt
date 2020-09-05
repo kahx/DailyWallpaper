@@ -52,11 +52,10 @@ class MainActivity : AppCompatActivity(){
         dueDate.set(Calendar.HOUR_OF_DAY, 3)
         dueDate.set(Calendar.MINUTE, 0)
         dueDate.set(Calendar.SECOND, 0)
-        val timeDiff = dueDate.timeInMillis - currentDate.timeInMillis
         if (dueDate.before(currentDate)) {
             dueDate.add(Calendar.HOUR_OF_DAY, 24)
         }
-
+        val timeDiff = dueDate.timeInMillis - currentDate.timeInMillis
         val request = PeriodicWorkRequestBuilder<BackWork>(timeDiff, TimeUnit.MILLISECONDS)
             .build()
 
@@ -293,8 +292,7 @@ class MainActivity : AppCompatActivity(){
             }else{
                 progressBar.visibility = View.VISIBLE
                 editor.putStringSet("selectedCats", hashSet).apply()
-                WorkManager.getInstance(this).cancelAllWork()
-                WorkManager.getInstance(this).enqueueUniquePeriodicWork("uniqueWork",ExistingPeriodicWorkPolicy.KEEP,request)
+                WorkManager.getInstance(this).enqueueUniquePeriodicWork("uniqueWork",ExistingPeriodicWorkPolicy.REPLACE,request)
             }
         }
 
