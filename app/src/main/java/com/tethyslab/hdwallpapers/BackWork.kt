@@ -54,7 +54,6 @@ class BackWork(context: Context, workerParams: WorkerParameters) : Worker(contex
                     .setSmallIcon(R.drawable.ic_stat_name)
                     .setContentTitle("Wallpaper changed!").setContentText("Hope you like it...")
 
-            notificationManager.notify(1234, notification.build())
             val getSelectedCats = sharedPreferences.getStringSet("selectedCats", null)
             val randomInt = (1..(getSelectedCats?.size as Int)).random()
             val wallpaper = getSelectedCats?.toList()?.get(randomInt - 1)
@@ -87,6 +86,7 @@ class BackWork(context: Context, workerParams: WorkerParameters) : Worker(contex
                                     wallpaperManager.setBitmap(bitmap)
                                     localBroadcastManager.sendBroadcast(progressBarIntent)
                                     localBroadcastManager.sendBroadcast(successIntent)
+                                    notificationManager.notify(1234, notification.build())
                                     latch.countDown()
                                 } catch (e: Exception) {
                                     localBroadcastManager.sendBroadcast(progressBarIntent)
