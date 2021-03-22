@@ -292,7 +292,7 @@ class MainActivity : AppCompatActivity(){
             }else{
                 progressBar.visibility = View.VISIBLE
                 editor.putStringSet("selectedCats", hashSet).apply()
-                WorkManager.getInstance(this).enqueueUniquePeriodicWork("uniqueWork",ExistingPeriodicWorkPolicy.REPLACE,request)
+                WorkManager.getInstance(this).enqueueUniqueWork("uniqueWork", ExistingWorkPolicy.REPLACE,request)
             }
         }
 
@@ -330,8 +330,7 @@ class MainActivity : AppCompatActivity(){
                         .setAction("RETRY"){
                             progressBar.visibility = View.VISIBLE
                             editor.putStringSet("selectedCats", hashSet).apply()
-                            WorkManager.getInstance(this@MainActivity).cancelAllWork()
-                            WorkManager.getInstance(this@MainActivity).enqueueUniquePeriodicWork("uniqueWork",ExistingPeriodicWorkPolicy.KEEP,request)
+                            WorkManager.getInstance(this@MainActivity).enqueueUniqueWork("uniqueWork", ExistingWorkPolicy.REPLACE,request)
                         }
                         .setActionTextColor(resources.getColor(R.color.colorAccent))
                         .show()
@@ -428,5 +427,4 @@ class MainActivity : AppCompatActivity(){
         if (getChangeSet.size == 1){
             editor.putString("empty","").apply()
         }
-    }
 }
