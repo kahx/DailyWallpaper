@@ -427,4 +427,5 @@ class MainActivity : AppCompatActivity(){
         if (getChangeSet.size == 1){
             editor.putString("empty","").apply()
         }
+    }  
 }
