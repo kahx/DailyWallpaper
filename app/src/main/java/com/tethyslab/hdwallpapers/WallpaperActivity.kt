@@ -12,7 +12,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
-import android.view.animation.DecelerateInterpolator
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
@@ -29,6 +29,39 @@ import java.io.OutputStream
 
 class WallpaperActivity : AppCompatActivity() {
     lateinit var currentBitmap : Bitmap
+    private lateinit var sharedPreferences : SharedPreferences
+    private val target = object : com.squareup.picasso.Target {
+        override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
+            Snackbar.make(findViewById(R.id.wallpaperLayout), "Image loading...", Snackbar.LENGTH_SHORT)
+                .setTextColor(resources.getColor(R.color.colorAccent))
+                .setBackgroundTint(resources.getColor(R.color.colorPrimaryDark))
+                .show()
+        }
+
+        override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
+            wallpaperProgresBar.visibility = View.GONE
+            Snackbar.make(findViewById(R.id.wallpaperLayout), "Error: "+e?.message, Snackbar.LENGTH_SHORT)
+                .setTextColor(resources.getColor(R.color.colorAccent))
+                .setBackgroundTint(resources.getColor(R.color.colorPrimaryDark))
+                .show()
+        }
+        override fun onBitmapLoaded(
+            bitmap: Bitmap?,
+            from: Picasso.LoadedFrom?
+        ) {
+            wallpaperProgresBar.visibility = View.GONE
+            try{
+                imageView.setImageBitmap(bitmap)
+                currentBitmap = bitmap!!
+
+            }catch (e: Exception){
+                Snackbar.make(findViewById(R.id.wallpaperLayout), "Error: "+e.message, Snackbar.LENGTH_SHORT)
+                    .setTextColor(resources.getColor(R.color.colorAccent))
+                    .setBackgroundTint(resources.getColor(R.color.colorPrimaryDark))
+                    .show()
+            }
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.layout_wallpaper)
@@ -38,42 +71,11 @@ class WallpaperActivity : AppCompatActivity() {
         circularProgressDrawable.centerRadius = 30f
         circularProgressDrawable.start()
 
-        val sharedPreferences = getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
+        sharedPreferences = getSharedPreferences("sharedPrefs", Context.MODE_PRIVATE)
         val editor : SharedPreferences.Editor = sharedPreferences.edit()
         val currentImage = sharedPreferences.getString("currentCatLink",null)
 
-
-
-        Picasso.get().load(currentImage).into(object: com.squareup.picasso.Target {
-            override fun onPrepareLoad(placeHolderDrawable: Drawable?) {
-                Snackbar.make(findViewById(R.id.wallpaperLayout), "Image loading...", Snackbar.LENGTH_SHORT)
-                    .setTextColor(resources.getColor(R.color.colorAccent))
-                    .setBackgroundTint(resources.getColor(R.color.colorPrimaryDark))
-                    .show()
-            }
-
-            override fun onBitmapFailed(e: Exception?, errorDrawable: Drawable?) {
-                Snackbar.make(findViewById(R.id.wallpaperLayout), "Error: "+e?.message, Snackbar.LENGTH_SHORT)
-                    .setTextColor(resources.getColor(R.color.colorAccent))
-                    .setBackgroundTint(resources.getColor(R.color.colorPrimaryDark))
-                    .show()
-            }
-            override fun onBitmapLoaded(
-                bitmap: Bitmap?,
-                from: Picasso.LoadedFrom?
-            ) {
-                try{
-                    imageView.setImageBitmap(bitmap)
-                    currentBitmap = bitmap!!
-
-                }catch (e: Exception){
-                    Snackbar.make(findViewById(R.id.wallpaperLayout), "Error: "+e.message, Snackbar.LENGTH_SHORT)
-                        .setTextColor(resources.getColor(R.color.colorAccent))
-                        .setBackgroundTint(resources.getColor(R.color.colorPrimaryDark))
-                        .show()
-                }
-            }
-        })
+        Picasso.get().load(currentImage).into(target)
 
         if (sharedPreferences.contains("wallpaperTarget")) {
             window.decorView.rootView.doOnPreDraw {
@@ -83,8 +85,6 @@ class WallpaperActivity : AppCompatActivity() {
                 var spotlight = Spotlight.Builder(this)
                     .setTargets(target)
                     .setBackgroundColor(R.color.background)
-                    .setDuration(1000L)
-                    .setAnimation(DecelerateInterpolator(2f))
                     .build()
                 spotlight.start()
                 editor.remove("wallpaperTarget").apply()
@@ -123,7 +123,7 @@ class WallpaperActivity : AppCompatActivity() {
                             it.openOutputStream(uri)?.let(write)
                         }
                 }
-                Snackbar.make(findViewById(R.id.wallpaperLayout),"Saved...", Snackbar.LENGTH_SHORT)
+                Snackbar.make(findViewById(R.id.wallpaperLayout),"Saved...", Snackbar.LENGTH_LONG)
                     .setTextColor(resources.getColor(R.color.colorAccent))
                     .setBackgroundTint(resources.getColor(R.color.colorPrimaryDark))
                     .show()
@@ -145,7 +145,7 @@ class WallpaperActivity : AppCompatActivity() {
                 MediaScannerConnection.scanFile(
                     this, arrayOf(image.toString()), null
                 ) { path, uri -> }
-                Snackbar.make(findViewById(R.id.wallpaperLayout), "Saved...", Snackbar.LENGTH_SHORT)
+                Snackbar.make(findViewById(R.id.wallpaperLayout), "Saved...", Snackbar.LENGTH_LONG)
                     .setTextColor(resources.getColor(R.color.colorAccent))
                     .setBackgroundTint(resources.getColor(R.color.colorPrimaryDark))
                     .show()
